@@ -14,7 +14,7 @@ class phpmyadmin{
 
 	file{"phpmyadmin config":
 		path => "/usr/share/php/config.inc.php",
-		content => template("phpmyadmin/config.inc.php.erb")
+		content => template("phpmyadmin/config.inc.php.erb"),
 		require => Package["phpmyadmin"]
 	}
 
