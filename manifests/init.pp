@@ -56,8 +56,4 @@ class phpmyadmin(
 		mode => 644
 	}
 
-	package{"php5-mcrypt":
-		ensure => installed
-	}
-
 }
