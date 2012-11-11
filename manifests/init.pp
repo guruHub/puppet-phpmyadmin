@@ -2,58 +2,44 @@ class phpmyadmin(
 	$dbuser = "puppet",
 	$dbpass = "puppet_user",
 	$dbname = "puppet",
-	$installpath = "/usr/share/phpmyadmin"
+	$installpath = "/usr/share/"
 ){
 
+  $pma_version = '3.5.3'
 
-	file { '/tmp/phpMyAdmin-3.5.3.tar.gz':
-		ensure => file,
-		owner => root,
-		group => root,
-		source => 'puppet:///modules/phpmyadmin/phpMyAdmin-3.5.3.tar.gz',
-    }
+  # Download latest pma
+  exec { 'download latests pma':
+    command => "/usr/bin/wget -o /tmp/phpmyadmin.latest.gz http://sourceforge.net/projects/phpmyadmin/files/phpMyAdmin/${pma_version}/phpMyAdmin-${pma_version}-english.tar.gz/download"
+  }
 
-    exec { 'untar phpmyadmin':
-		command => '/bin/tar -xzvf /tmp/phpMyAdmin-3.5.3.tar.gz',
-		creates => '/tmp/phpMyAdmin-3.5.3-all-languages',
+  exec { 'untar phpmyadmin':
+		command => '/bin/tar -xzvf /tmp/phpmyadmin.latest.tar.gz',
+		creates => "/tmp/phpMyAdmin-${pma_version}-english",
 		cwd => "/tmp",
 		group => root,
 		user => root,
-
-		require => File['/tmp/phpMyAdmin-3.5.3.tar.gz'],
-    }
+		require => File['/tmp/phpmyadmin.latest.tar.gz'],
+  }
 
 	exec { 'Move to the install path':
-		command => "/bin/mv /tmp/phpMyAdmin-3.5.3-all-languages ${installpath}",
+		command => "/bin/mv /tmp/phpMyAdmin-${pma_version}-english ${installpath}",
 		group => root,
 		user => root,
 		onlyif => "test ! -d ${installpath}",
-		require => Exec['untar phpmyadmin'],
-    }
+		require => [ Exec['untar phpmyadmin'], File[$installpath] ]
+  }
 
 	file {$installpath:
-			ensure => directory,
-			recurse => true,
-			group => 'www-data',
-			owner => "www-data",
-			mode => 644,
-			require => Exec['Move to the install path'],
+    ensure => directory,
+    recurse => true,
+    group => 'www-data',
+    owner => "www-data",
+    mode => 644,
 	}
 
-	file{ "create phpmyadmin apache config":
-		content => template("phpmyadmin/phpmyadmin.conf.erb"),
-		path => "/etc/apache2/conf.d/phpmyadmin.conf",
-		require => File[$installpath],
-		notify => Service["apache2"],
-	}
-
-	file{"phpmyadmin config":
-		path => "${installpath}/config.inc.php",
-		content => template("phpmyadmin/config.inc.php.erb"),
-		require => Exec["Move to the install path"],
-		owner => "www-data",
-		group => "www-data",
-		mode => 644
-	}
+  file { "${installpath}/phpmyadmin":
+    ensure => lynk,
+    target => "${installpath}/phpMyAdmin-${pma_version}-english",
+  }
 
 }
