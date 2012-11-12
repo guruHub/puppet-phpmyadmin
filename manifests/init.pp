@@ -38,8 +38,9 @@ class phpmyadmin(
 	}
 
   file { "${installpath}/phpmyadmin":
-    ensure => lynk,
-    target => "${installpath}/phpMyAdmin-${pma_version}-english",
+    ensure  => lynk,
+    target  => "${installpath}/phpMyAdmin-${pma_version}-english",
+    require => Exec['Move to the install path']
   }
 
 }
