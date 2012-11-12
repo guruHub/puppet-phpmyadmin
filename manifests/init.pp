@@ -9,7 +9,7 @@ class phpmyadmin(
 
   # Download latest pma
   exec { 'download latests pma':
-    command => "/usr/bin/wget -o /tmp/phpmyadmin.latest.gz http://sourceforge.net/projects/phpmyadmin/files/phpMyAdmin/${pma_version}/phpMyAdmin-${pma_version}-english.tar.gz/download"
+    command => "/usr/bin/wget -o /dev/null -O /tmp/phpmyadmin.latest.gz http://sourceforge.net/projects/phpmyadmin/files/phpMyAdmin/${pma_version}/phpMyAdmin-${pma_version}-english.tar.gz/download"
   }
 
   exec { 'untar phpmyadmin':
