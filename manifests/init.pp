@@ -25,7 +25,7 @@ class phpmyadmin(
 		command => "/bin/mv /tmp/phpMyAdmin-${pma_version}-english ${installpath}",
 		group => root,
 		user => root,
-		onlyif => "test ! -d ${installpath}",
+		onlyif => "/usr/bin/test ! -d ${installpath}",
 		require => [ Exec['untar phpmyadmin'], File[$installpath] ]
   }
 
