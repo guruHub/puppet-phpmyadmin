@@ -1,4 +1,4 @@
-puppet-mysql
+puppet-phpmyadmin
 ================
 
-My PHPMyAdmin puppet module for Vagrant
+My PHPMyAdmin puppet module
