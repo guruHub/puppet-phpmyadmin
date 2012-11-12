@@ -15,10 +15,10 @@ class phpmyadmin(
   exec { 'untar phpmyadmin':
 		command => '/bin/tar -xzvf /tmp/phpmyadmin.latest.tar.gz',
 		creates => "/tmp/phpMyAdmin-${pma_version}-english",
-		cwd => "/tmp",
-		group => root,
-		user => root,
-		require => File['/tmp/phpmyadmin.latest.tar.gz'],
+		cwd     => "/tmp",
+		group   => root,
+		user    => root,
+		require => Exec['download latests pma']
   }
 
 	exec { 'Move to the install path':
