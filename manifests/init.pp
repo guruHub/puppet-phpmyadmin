@@ -13,7 +13,7 @@ class phpmyadmin(
     creates => "/tmp/phpmyadmin.latest.tar.gz"
   } -> exec { 'untar phpmyadmin':
     command => '/bin/tar -xzvf /tmp/phpmyadmin.latest.tar.gz',
-    creates => "${installpath}/pphpMyAdmin-${pma_version}-english",
+    creates => "${installpath}/phpMyAdmin-${pma_version}-english",
     cwd     => "/tmp",
     group   => root,
     user    => root,
@@ -26,14 +26,13 @@ class phpmyadmin(
     mode => 644,
   } -> exec { 'Move to the install path':
     command => "/bin/mv /tmp/phpMyAdmin-${pma_version}-english ${installpath}",
-    group => root,
-    user => root,
-    onlyif => "/usr/bin/test ! -d ${installpath}",
-    require => [ Exec['untar phpmyadmin'], File[$installpath] ]
+    group   => root,
+    user    => root,
+    creates => "${installpath}/phpMyAdmin-${pma_version}-english"
+  
   } -> file { "${installpath}/phpmyadmin":
     ensure  => lynk,
     target  => "${installpath}/phpMyAdmin-${pma_version}-english",
-    require => Exec['Move to the install path']
   }
 
 }
