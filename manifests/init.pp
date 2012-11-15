@@ -2,7 +2,7 @@ class phpmyadmin(
   $dbuser = "puppet",
   $dbpass = "puppet_user",
   $dbname = "puppet",
-  $installpath = "/usr/share/"
+  $installpath = "/usr/share/phpmyadmin/"
 ){
 
   $pma_version = '3.5.3'
@@ -13,7 +13,7 @@ class phpmyadmin(
     creates => "/tmp/phpmyadmin.latest.tar.gz"
   } -> exec { 'untar phpmyadmin':
     command => '/bin/tar -xzvf /tmp/phpmyadmin.latest.tar.gz',
-    creates => "${installpath}/phpMyAdmin-${pma_version}-english",
+    creates => "/tmp/phpMyAdmin-${pma_version}-english",
     cwd     => "/tmp",
     group   => root,
     user    => root,
@@ -30,7 +30,7 @@ class phpmyadmin(
     user    => root,
     creates => "${installpath}/phpMyAdmin-${pma_version}-english"
   
-  } -> file { "${installpath}/phpmyadmin":
+  } -> file { "${installpath}/latest":
     ensure  => lynk,
     target  => "${installpath}/phpMyAdmin-${pma_version}-english",
   }
